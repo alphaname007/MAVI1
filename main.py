@@ -11,6 +11,9 @@ while True:
 
     target_position = mavi.get_target_position()
 
-    led_address = mavi.calculate_led_address(target_position)
+    in_center, led_address = mavi.calculate_led_address(target_position)
 
-    mavi.write_led(led_address, (255, 0, 0))
+    if in_center:
+        mavi.write_led_strip(0, 0, 255)
+    else:
+        mavi.write_led(led_address, (255, 0, 0))
