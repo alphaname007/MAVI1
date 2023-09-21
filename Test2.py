@@ -1,21 +1,43 @@
 import cv2
 import numpy as np
 
-cap=cv2.VideoCapture(0)
+threshold = 0.5
 
-face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
+# Capture the webcam feed
+cap = cv2.VideoCapture(0)
+
+# Load the image of the object you want to track
+target_img = cv2.imread('target.jpg')
+target_img = cv2.cvtColor(target_img, cv2.COLOR_BGR2GRAY)
+
+# Get the width and height of the template
+w, h = target_img.shape[::-1]
 
 while True:
-    ret,frame = cap.read()
+    # Read a frame from the webcam feed
+    ret, frame = cap.read()
 
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    
-    faces = face_cascade.detectMultiScale(gray, 1.3,5)
+    if ret:
+        # Convert the frame to grayscale
+        frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    for (x,y,w,h) in faces:
-        cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),5)
 
-        roi_gray = gray[y:y+w,x:x+w]
-        roi_color = frame[y:y+h,x:x+w]
+        # Use matchTemplate to find the object in the frame
+        result = cv2.matchTemplate(frame_gray, target_img, cv2.TM_CCOEFF_NORMED)
 
-        eyes= eye_cascade.detectMultiScale(roi_gray,1.3,5)
+        loc = np.where( result >= threshold)
+        
+        for pt in zip(*loc[::-1]):
+            cv2.rectangle(frame, pt, (pt[0] + w, pt[1] + h), (0, 255, 255), 2)
+
+        # Show the frame with the object highlighted
+        cv2.imshow('frame', frame)
+
+    # Exit the loop if the 'q' key is pressed
+    if cv2.waitKey(1) == ord('q') or cv2.waitKey(1) == ord('Q'):
+        break
+
+# Release the webcam and close all windows
+cap.release()
+cv2.destroyAllWindows()
