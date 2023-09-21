@@ -1,4 +1,5 @@
 sudo pip install opencv-python
 sudo pip install gpiozero
+sudo pip install smbus
 sudo pip install adafruit-circuitpython-neopixel
 sudo python3 -m pip install --force-reinstall adafruit-blinka
