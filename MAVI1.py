@@ -2,20 +2,18 @@ import cv2
 import time
 import numpy as np
 
+leds_count = 20
 
 target_img = cv2.imread("target.jpg", cv2.IMREAD_GRAYSCALE)
 
 video = cv2.VideoCapture(1)
-
-orientation_x = 0
-orientation_y = 0
 
 target_position = (50, 50) # x|y in percent
 
 frequency = 500 #in ms
 
 
-def get_target_position(threshold=0.95):
+def get_target_position(threshold:float=0.95):
     #_, frame = video.read()
     #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     frame = cv2.imread("Test.jpg", cv2.IMREAD_GRAYSCALE)
@@ -35,18 +33,14 @@ def get_target_position(threshold=0.95):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-    return None
+    return (0, 0)
 
+def write_leds(position:tuple):
+    return True
 
-get_target_position()
-
-
-
-"""
 while True:
-
     time.sleep(frequency/1000)
 
     target_position = get_target_position()
 
-"""
+    write_leds(target_position)
