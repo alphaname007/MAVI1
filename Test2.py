@@ -34,6 +34,7 @@ while True:
             loc = np.where( result >= threshold)
 
             for pt in zip(*loc[::-1]):
+                print("found")
                 cv2.rectangle(frame, pt, pt, (0, 255, 255), 1)
 
         # Show the frame with the object highlighted

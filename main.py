@@ -1,4 +1,4 @@
-import MAVI1
+from mavi1 import MAVI1
 
 import time
 
