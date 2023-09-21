@@ -1,0 +1,4 @@
+sudo pip install opencv-python
+sudo pip install rpi_ws281x
+sudo pip install adafruit-circuitpython-neopixel
+sudo python3 -m pip install --force-reinstall adafruit-blinka
