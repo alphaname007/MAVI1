@@ -64,7 +64,7 @@ class MAVI1:
 
                 for position in zip(*loc[::-1]):
                     cv2.circle(frame, position, 5, (0, 255, 255), 2)
-                    return [(position[1] / frame_size[1] * 100, position[0] / frame_size[0] * 100), True, frame]
+                    return [(position[0] / frame_size[0] * 100, position[1] / frame_size[1] * 100), True, frame]
         return [(0, 0), False, frame]
 
     
