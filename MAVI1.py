@@ -41,9 +41,8 @@ class MAVI1:
     def get_angle_y(self):
         return 120
 
-    def get_target_position_from_img(self):
+    def get_target(self):
         ret, frame = self.video_capture.read()
-        cv2.imshow('frame', frame)
 
         scales = np.linspace(0.2, 1.0, 20)[::-1]
 
@@ -61,8 +60,12 @@ class MAVI1:
 
                 loc = np.where( result >= self.threshold)
 
+                cv2.imshow('frame', frame)
+
                 for position in zip(*loc[::-1]):
-                    return (position[1] / frame_size[1] * 100, position[0] / frame_size[0] * 100)
+                    cv2.circle(frame, position, 5, (0, 255, 255), 2)
+                    return [(position[1] / frame_size[1] * 100, position[0] / frame_size[0] * 100), True, frame]
+        return [(0, 0), False, frame]
 
     
     def calculate_target_angles_from_img_position(self, position:tuple):
