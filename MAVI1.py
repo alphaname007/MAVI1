@@ -26,7 +26,7 @@ class MAVI1:
     speaker_language = None
     speaker_volume = None
 
-    False
+    _new_audio = False
 
     mixer.init()
 
