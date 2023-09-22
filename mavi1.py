@@ -1,10 +1,6 @@
-import os
 import cv2
 import math
 import numpy as np
-from gtts import gTTS
-from pygame import mixer
-from threading import Thread
 ##import neopixel
 #import board
 #from gpiozero import DistanceSensor
@@ -26,15 +22,11 @@ class MAVI1:
     speaker_language = None
     speaker_volume = None
 
-    _new_audio = False
-
-    mixer.init()
-
     led_strip = None
     ultrasonic_sensor = None
     gyro_sensor = None
 
-    def __init__(self, led_count:int, led_brightness:float=1, threshold:float=0.6, target_file:str="target.jpg",  field_of_view_angle:int=90, angle_center_cone_angle:int=10, speaker_volume=0.2, speaker_language="en"):
+    def __init__(self, led_count:int, led_brightness:float=1, threshold:float=0.6, target_file:str="target.jpg",  field_of_view_angle:int=90, angle_center_cone_angle:int=10):
         self.led_count = led_count
         self.led_brightness = led_brightness
         self.threshold = threshold
@@ -42,8 +34,6 @@ class MAVI1:
         self.field_of_view_angle = field_of_view_angle
         self.angle_center_cone_angle = angle_center_cone_angle
         self.video_capture = cv2.VideoCapture(0)
-        self.speaker_language = speaker_language
-        self.speaker_volume = speaker_volume
         #setup_gpio()
 
 
@@ -117,22 +107,7 @@ class MAVI1:
         self.strip.fill(color)
         return True
     
-    def speak(self, text:str):
-        if not self._speaking:
-            speaker_thread = Thread()
-
-
-    def _speak(self, text:str):
-        if not self._speaking:
-            self._speaking = True
-            spoken = gTTS(text=text, lang=self.speaker_language, slow=False)
-            spoken.save("tmp.mp3")
-            mixer.music.load("tmp.mp3")
-            mixer.music.set_volume(self.speaker_volume)
-            mixer.music.play()
-            os.remove("tmp.mp3")
-            self._speaking = False
-        
+    
 
 
     def setup_gpio(self):
