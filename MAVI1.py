@@ -1,7 +1,11 @@
+import os
 import cv2
 import math
 import numpy as np
-#import neopixel
+from gtts import gTTS
+from pygame import mixer
+from threading import Thread
+##import neopixel
 #import board
 #from gpiozero import DistanceSensor
 
@@ -19,11 +23,18 @@ class MAVI1:
 
     video_capture = None
 
+    speaker_language = None
+    speaker_volume = None
+
+    False
+
+    mixer.init()
+
     led_strip = None
     ultrasonic_sensor = None
     gyro_sensor = None
 
-    def __init__(self, led_count:int, led_brightness:float=1, threshold:float=0.6, target_file:str="target.jpg",  field_of_view_angle:int=90, angle_center_cone_angle:int=10):
+    def __init__(self, led_count:int, led_brightness:float=1, threshold:float=0.6, target_file:str="target.jpg",  field_of_view_angle:int=90, angle_center_cone_angle:int=10, speaker_volume=0.2, speaker_language="en"):
         self.led_count = led_count
         self.led_brightness = led_brightness
         self.threshold = threshold
@@ -31,6 +42,8 @@ class MAVI1:
         self.field_of_view_angle = field_of_view_angle
         self.angle_center_cone_angle = angle_center_cone_angle
         self.video_capture = cv2.VideoCapture(0)
+        self.speaker_language = speaker_language
+        self.speaker_volume = speaker_volume
         #setup_gpio()
 
 
@@ -41,6 +54,9 @@ class MAVI1:
     def get_angle_y(self):
         return 120
 
+    def get_distance(self):
+        return ultrasonic_sensor.distance
+    
     def get_target(self):
         ret, frame = self.video_capture.read()
 
@@ -69,8 +85,8 @@ class MAVI1:
 
     
     def calculate_target_angles_from_img_position(self, position:tuple):
-        angle_x = get_angle_x() - field_of_view_angle / 2 + field_of_view_angle * position[0]
-        angle_y = get_angle_y() - field_of_view_angle / 2 + field_of_view_angle * position[1]
+        angle_x = self.get_angle_x() - self.field_of_view_angle / 2 + self.field_of_view_angle * position[0]
+        angle_y = self.get_angle_y() - self.field_of_view_angle / 2 + self.field_of_view_angle * position[1]
         return (angle_x, angle_y)
 
     def calculate_led_address_x1_x2_plane(self, angle_x:float, offset:float=0):
@@ -90,13 +106,34 @@ class MAVI1:
         return address
 
 
+    def write_led(self, address:int, color:tuple):
+        if address > self.led_count:
+            return False
+        else:
+            self.strip[address] = color
+            return True
 
     def write_led_strip(self, color):
         self.strip.fill(color)
         return True
+    
+    def speak(self, text:str):
+        if not self._speaking:
+            speaker_thread = Thread()
 
-    def get_distance(self):
-        return ultrasonic_sensor.distance
+
+    def _speak(self, text:str):
+        if not self._speaking:
+            self._speaking = True
+            spoken = gTTS(text=text, lang=self.speaker_language, slow=False)
+            spoken.save("tmp.mp3")
+            mixer.music.load("tmp.mp3")
+            mixer.music.set_volume(self.speaker_volume)
+            mixer.music.play()
+            os.remove("tmp.mp3")
+            self._speaking = False
+        
+
 
     def setup_gpio(self):
         self.led_strip = neopixel.NeoPixel(board.D18, 30, self.led_brightness)  #LED-Strip: LED Pin 30

@@ -14,6 +14,9 @@ while True:
 
     print(found, position)
 
+    if found:
+        mavi.speak("Object detected")
+
     cv2.imshow('frame', frame)
 
     if cv2.waitKey(1) == ord('q') or cv2.waitKey(1) == ord('Q'):
