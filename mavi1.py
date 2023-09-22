@@ -33,7 +33,7 @@ class MAVI1:
         self.target_img = cv2.imread(target_file, cv2.IMREAD_GRAYSCALE)
         self.field_of_view_angle = field_of_view_angle
         self.angle_center_cone_angle = angle_center_cone_angle
-        self.video_capture = cv2.VideoCapture(1)
+        self.video_capture = cv2.VideoCapture(0)
         #setup_gpio()
 
 
