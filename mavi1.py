@@ -66,8 +66,6 @@ class MAVI1:
 
                 loc = np.where( result >= self.threshold)
 
-                cv2.imshow('frame', frame)
-
                 for position in zip(*loc[::-1]):
                     cv2.circle(frame, position, 5, (0, 255, 255), 2)
                     return [(position[0] / frame_size[0] * 100, position[1] / frame_size[1] * 100), True, frame]

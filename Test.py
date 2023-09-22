@@ -12,10 +12,9 @@ while True:
     found = ret[1]
     frame = ret[2]
 
-    print(found, position)
+    angles = mavi.calculate_target_angles_from_img_position(position)
 
-    if found:
-        mavi.speak("Object detected")
+    print(found, position)
 
     cv2.imshow('frame', frame)
 
