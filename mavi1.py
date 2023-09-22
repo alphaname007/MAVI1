@@ -19,30 +19,33 @@ class MAVI1:
 
     video_capture = None
 
-    speaker_language = None
-    speaker_volume = None
+
+    angle_offset:tuple = None
 
     led_strip = None
     ultrasonic_sensor = None
     gyro_sensor = None
 
-    def __init__(self, led_count:int, led_brightness:float=1, threshold:float=0.6, target_file:str="target.jpg",  field_of_view_angle:int=90, angle_center_cone_angle:int=10):
+    def __init__(self, led_count:int, led_brightness:float=1, threshold:float=0.6, target_file:str="target.jpg", angle_offset:tuple=(0,0), field_of_view_angle:int=90):
         self.led_count = led_count
         self.led_brightness = led_brightness
         self.threshold = threshold
         self.target_img = cv2.imread(target_file, cv2.IMREAD_GRAYSCALE)
         self.field_of_view_angle = field_of_view_angle
-        self.angle_center_cone_angle = angle_center_cone_angle
+        self.angle_offset = angle_offset
         self.video_capture = cv2.VideoCapture(0)
         #setup_gpio()
 
 
 
     def get_angle_x(self):
-        return 270
+        return 0
 
     def get_angle_y(self):
-        return 120
+        return 0
+    
+    def get_angles(self):
+        return (self.get_angle_x(), self.get_angle_y())
 
     def get_distance(self):
         return ultrasonic_sensor.distance
@@ -73,25 +76,41 @@ class MAVI1:
 
     
     def calculate_target_angles_from_img_position(self, position:tuple):
-        angle_x = self.get_angle_x() - self.field_of_view_angle / 2 + self.field_of_view_angle * position[0]
-        angle_y = self.get_angle_y() - self.field_of_view_angle / 2 + self.field_of_view_angle * position[1]
+        angle_x = self.get_angle_x() - self.field_of_view_angle / 2 + self.field_of_view_angle * position[0] / 100
+        angle_y = self.get_angle_y() - self.field_of_view_angle / 2 + self.field_of_view_angle * position[1] / 100
+
+        angle_x = angle_x - 360 if angle_x > 360 else angle_x
+        angle_y = angle_y - 360 if angle_y > 360 else angle_y
+
         return (angle_x, angle_y)
 
-    def calculate_led_address_x1_x2_plane(self, angle_x:float, offset:float=0):
-        angle_x = angle_x + offset if angle_x + offset <= 360 else angle_x + offset - 360
+    def calculate_target_delta(self, current_angles:tuple, target_angles:tuple):
+        if current_angles[0] - target_angles[0] + self.angle_offset[0] > 360:
+            delta_x = current_angles[0] - target_angles[0] + self.angle_offset[0] - 360 
+        else:
+            delta_x = current_angles[0] - target_angles[0] + self.angle_offset[0]
+
+        if (current_angles[1] - target_angles[1] + self.angle_offset[1] > 360):
+            delta_y = current_angles[1] - target_angles[1] + self.angle_offset[1] - 360 
+        else:
+            delta_y = current_angles[1] - target_angles[1] + self.angle_offset[1]
+
+        return (delta_x, delta_y)
+
+    def calculate_led_address_x1_x2_plane(self, angle_x:float):
+        angle_x = angle_x + self.angle_offset[0] - 360 if angle_x + self.angle_offset[0] > 360 else angle_x + self.angle_offset[0]
         return int((angle_x / 360) * self.led_count)
 
-    def calculate_led_address_sphere(self, current_angles:tuple, target_angles:tuple, offset:float=0):
-        delta_x = current_angles[0] - target_angles[0]
-        delta_y = current_angles[1] - target_angles[1]
-
-        if delta_x == 0:
-            delta_x = 0.00000001
+    def calculate_led_address_sphere(self, delta_angles:tuple):
+        delta_x = delta_angles[0] if delta_angles[0] != 0 else 0.00000001
+        delta_y = delta_angles[1]
 
         alpha = math.tan(delta_y / delta_x)
 
         address = alpha / 360 * self.led_count
-        return address
+        print(address)
+
+        return int(address)
 
 
     def write_led(self, address:int, color:tuple):
