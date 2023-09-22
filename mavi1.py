@@ -39,10 +39,10 @@ class MAVI1:
 
 
     def get_angle_x(self):
-        return 0
+        return (0 + self.angle_offset[0]) % 360
 
     def get_angle_y(self):
-        return 0
+        return (0 + self.angle_offset[1]) % 360
     
     def get_angles(self):
         return (self.get_angle_x(), self.get_angle_y())
@@ -71,7 +71,7 @@ class MAVI1:
 
                 for position in zip(*loc[::-1]):
                     cv2.circle(frame, position, 5, (0, 255, 255), 2)
-                    return [(position[0] / frame_size[0] * 100, position[1] / frame_size[1] * 100), True, frame]
+                    return [(position[0] / frame_size[0] * 100, 100 - (position[1] / frame_size[1] * 100)), True, frame]
         return [(0, 0), False, frame]
 
     
@@ -79,35 +79,36 @@ class MAVI1:
         angle_x = self.get_angle_x() - self.field_of_view_angle / 2 + self.field_of_view_angle * position[0] / 100
         angle_y = self.get_angle_y() - self.field_of_view_angle / 2 + self.field_of_view_angle * position[1] / 100
 
-        angle_x = angle_x - 360 if angle_x > 360 else angle_x
-        angle_y = angle_y - 360 if angle_y > 360 else angle_y
+        angle_x = angle_x % 360
+        angle_y = angle_y % 360
 
         return (angle_x, angle_y)
 
     def calculate_target_delta(self, current_angles:tuple, target_angles:tuple):
-        if current_angles[0] - target_angles[0] + self.angle_offset[0] > 360:
-            delta_x = current_angles[0] - target_angles[0] + self.angle_offset[0] - 360 
-        else:
-            delta_x = current_angles[0] - target_angles[0] + self.angle_offset[0]
-
-        if (current_angles[1] - target_angles[1] + self.angle_offset[1] > 360):
-            delta_y = current_angles[1] - target_angles[1] + self.angle_offset[1] - 360 
-        else:
-            delta_y = current_angles[1] - target_angles[1] + self.angle_offset[1]
+        delta_x = (current_angles[0] - target_angles[0]) % 360
+        delta_y = (current_angles[1] - target_angles[1]) % 360
 
         return (delta_x, delta_y)
 
     def calculate_led_address_x1_x2_plane(self, angle_x:float):
-        angle_x = angle_x + self.angle_offset[0] - 360 if angle_x + self.angle_offset[0] > 360 else angle_x + self.angle_offset[0]
-        return int((angle_x / 360) * self.led_count)
+        angle_x = angle_x % 360
+        address = angle_x / 360 * self.led_count
+        return int(address)
 
     def calculate_led_address_sphere(self, delta_angles:tuple):
         delta_x = delta_angles[0] if delta_angles[0] != 0 else 0.00000001
-        delta_y = delta_angles[1]
+        delta_y = delta_angles[1] if delta_angles[1] != 0 else 0.00000001
 
-        alpha = math.tan(delta_y / delta_x)
+        delta_x = delta_x / 360
+        delta_y = delta_y / 360
 
-        address = alpha / 360 * self.led_count
+        print(delta_x, delta_y)
+
+        alpha = math.asin(delta_x)
+
+        print(alpha)
+
+        address = (alpha / 360) * self.led_count
         print(address)
 
         return int(address)

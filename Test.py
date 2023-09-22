@@ -18,9 +18,11 @@ while True:
 
     delta_angles = mavi.calculate_target_delta(current_angles, target_angles)
 
-    address = mavi.calculate_led_address_sphere(delta_angles)
-
-    print(f"Target:{found}, \t img_position {position}, \t delta_angles {delta_angles}, \t address {address}")
+    if False:# delta_angles[0] < 5 and delta_angles[1] < 5:
+        print("Target centered")
+    elif found:
+        address = mavi.calculate_led_address_sphere(delta_angles)
+        print(f"Target:{found}, \t img_position {position}, \t delta_angles {delta_angles}, \t address {address}")
 
     cv2.imshow('frame', frame)
 
