@@ -85,43 +85,49 @@ class MAVI1:
         return (angle_x, angle_y)
 
     def calculate_target_delta(self, current_angles:tuple, target_angles:tuple):
-        delta_x = (current_angles[0] - target_angles[0]) % 360
-        delta_y = (current_angles[1] - target_angles[1]) % 360
+        delta_x = (target_angles[0] - current_angles[0]) % 360
+        delta_y = (target_angles[1] - current_angles[1]) % 360
 
         return (delta_x, delta_y)
 
-    def calculate_led_address_x1_x2_plane(self, angle_x:float):
+    def calculate_led_address_x1_plane(self, angle_x:float):
         angle_x = angle_x % 360
         address = angle_x / 360 * self.led_count
         return int(address)
 
     def calculate_led_address_sphere(self, delta_angles:tuple):
-        delta_x = delta_angles[0] if delta_angles[0] != 0 else 0.00000001
-        delta_y = delta_angles[1] if delta_angles[1] != 0 else 0.00000001
+        delta_x, delta_y = delta_angles[0] / 360, delta_angles[1] / 360
 
-        delta_x = delta_x / 360
-        delta_y = delta_y / 360
+        rad = math.acos(delta_y / math.sqrt(delta_x*delta_x + delta_y*delta_y))
 
-        print(delta_x, delta_y)
+        alpha = 360 - math.degrees(rad)
 
-        alpha = math.asin(delta_x)
+        if delta_x < 0:
+            alpha = 360 - alpha
 
         print(alpha)
 
         address = (alpha / 360) * self.led_count
         print(address)
-
         return int(address)
 
-
     def write_led(self, address:int, color:tuple):
+        return
         if address > self.led_count:
             return False
         else:
             self.strip[address] = color
             return True
+        
+    def write_leds(self, addresses:list, color:tuple):
+        return
+        for address in addresses:
+            if not self.write_led(address, color):
+                return False
+        return True
 
     def write_led_strip(self, color):
+        return
         self.strip.fill(color)
         return True
     
