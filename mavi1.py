@@ -96,7 +96,7 @@ class MAVI1:
         return int(address)
 
     def calculate_led_address_sphere(self, delta_angles:tuple):
-        delta_x, delta_y = delta_angles[0] / 360, delta_angles[1] / 360
+        delta_x, delta_y = (delta_angles[0] - 180) / 180, (delta_angles[1] - 180) / 180
 
         rad = math.acos(delta_y / math.sqrt(delta_x*delta_x + delta_y*delta_y))
 
