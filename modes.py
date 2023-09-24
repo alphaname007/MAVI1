@@ -1,7 +1,28 @@
 import time
 import cv2
 
-def MODE_find_target(mavi):
+def MODE_find_target(mavi, threshold:float=0.6, spotted_angles:int=10):
+    position, found, frame = mavi.get_target()
+
+    cv2.imshow("frame")
+    
+    if not found:
+        mavi.write_led_strip((255,0,0))
+        return
+    else:
+        target_angles = mavi.calculate_target_angles_from_img_position(position) #Could be used to store the last known target position
+        delta_angles = mavi.calculate_target_delta(mavi.get_angles(), target_angles)
+        if delta_angles[0] < spotted_angles and delta_angles[1] < spotted_angles:
+            mavi.write_led_strip((0,255,0))
+            return
+        else:
+            address = mavi.calculate_led_address_sphere(delta_angles)
+            mavi.write_led(address, (0,0,255))
+
+
+
+
+def MODE_find_target_on_camera(mavi):
     position, found, frame = mavi.get_target()
 
     position_x, position_y = position
