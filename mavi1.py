@@ -7,36 +7,32 @@ import numpy as np
 
 class MAVI1:
     led_count:int = None 
-    led_brightness:float = None # 0-1
-
-    threshold:float = None
-
-    field_of_view_angle:int = None
-
-    angle_center_cone_angle:float = None #0-1
-
-    target_img = None
-
-    video_capture = None
-
+    led_brightness:float = None #0-1
 
     angle_offset:tuple = None
+    field_of_view_angle:int = None
+
+    target_img = None #cv2.imread()
+    video_capture = None #cv2.VideoCapture()
 
     led_strip = None
     ultrasonic_sensor = None
     gyro_sensor = None
 
-    def __init__(self, led_count:int, led_brightness:float=1, threshold:float=0.6, target_file:str="target.jpg", angle_offset:tuple=(0,0), field_of_view_angle:int=90):
+    def __init__(self, led_count:int, led_brightness:float=1, angle_offset:tuple=(0,0), field_of_view_angle:int=90):
         self.led_count = led_count
         self.led_brightness = led_brightness
-        self.threshold = threshold
-        self.target_img = cv2.imread(target_file, cv2.IMREAD_GRAYSCALE)
-        self.field_of_view_angle = field_of_view_angle
+
         self.angle_offset = angle_offset
+        self.field_of_view_angle = field_of_view_angle
+        
         self.video_capture = cv2.VideoCapture(0)
+        change_target("target.jpg")
+        
         #setup_gpio()
 
-
+    def change_target(self, filename:str)
+        self.target_img = cv2.imread(target_file, cv2.IMREAD_GRAYSCALE)
 
     def get_angle_x(self):
         return (0 + self.angle_offset[0]) % 360
@@ -50,7 +46,7 @@ class MAVI1:
     def get_distance(self):
         return ultrasonic_sensor.distance
     
-    def get_target(self):
+    def get_target(self, threshold:float=0.6):
         ret, frame = self.video_capture.read()
 
         scales = np.linspace(0.2, 1.0, 20)[::-1]
@@ -71,7 +67,8 @@ class MAVI1:
 
                 for position in zip(*loc[::-1]):
                     cv2.circle(frame, position, 5, (0, 255, 255), 2)
-                    return [(position[0] / frame_size[0] * 100, 100 - (position[1] / frame_size[1] * 100)), True, frame]
+                    position_percent = (position[0] / frame_size[0] * 100, 100 - (position[1] / frame_size[1] * 100))
+                    return [position_percent, True, frame]
         return [(0, 0), False, frame]
 
     
