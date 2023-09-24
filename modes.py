@@ -1,9 +1,8 @@
-def MODE_find_target():
-    ret = mavi.get_target()
+import time
+import cv2
 
-    position = ret[0]
-    found = ret[1]
-    frame = ret[2]
+def MODE_find_target(mavi):
+    position, found, frame = mavi.get_target()
 
     position_x, position_y = position
 
@@ -52,10 +51,23 @@ def MODE_find_target():
         print("target SPOTTED")
         return mavi.write_led_strip((0, 255, 0))
 
-def MODE_compass():
-    return mavi.write_led(mavi.calculate_led_address_x1_plane(mavi.get_angle_x), (0,0,255))
+def MODE_compass(mavi):
+    mavi.write_led(mavi.calculate_led_address_x1_plane(mavi.get_angle_x), (0,0,255))
 
-def MODE_start_up():
+def MODE_distance(mavi, inner_boundary:int=50, outer_boundary:int=200):
+    distance = mavi.get_distance()
+    percent = inner_boundary / outer_boundary * 100
+
+    start_address_right = int(mavi.led_count / 4 - mavi.led_count / 4 * percent / 100)
+    start_address_left = int(mavi.led_count * 3 / 4 - mavi.led_count / 4 * percent / 100)
+    
+    end_address_right = int(mavi.led_count / 4 + mavi.led_count / 4 * percent / 100)
+    end_address_left = int(mavi.led_count * 3 / 4 + mavi.led_count / 4 * percent / 100)
+    
+    addresses = list(range(start_address_right, end_address_right)) + list(range(start_address_left, end_address_left))
+    mavi.write_leds(addresses,  (0,0255))
+
+def MODE_start_up(mavi):
     mavi.write_led_strip((0,0,0))
     color_change = 255 / mavi.led_count
     for i in range(0, mavi.led_count):
