@@ -3,6 +3,6 @@ sudo pip install gpiozero
 sudo pip install smbus
 sudo pip install gTTS
 sudo pip install pygame
-sudo pip install flask 
+sudo pip install flask
 sudo pip install adafruit-circuitpython-neopixel
 sudo python3 -m pip install --force-reinstall adafruit-blinka

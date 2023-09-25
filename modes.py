@@ -24,60 +24,7 @@ def MODE_find_target(mavi, threshold:float=0.7, spotted_angles:int=10):
         mavi.write_led(address, (0,0,255))
         return(True, "found")
 
-
-
-
-def MODE_find_target_on_camera(mavi):
-    position, found, frame = mavi.get_target()
-
-    position_x, position_y = position
-
-    cv2.imshow("MODUS_find_target", frame)
-
-    if not found:
-        print("no target available")
-        mavi.write_led_strip((255, 0, 0))
-        return
-
-    mavi.write_led_strip((0,0,0))
-
-    if 15 <= position_x <= 85 and 85 <= position_y: #top
-        print("target in TOP")
-        return mavi.write_leds(list(range(int(mavi.led_count-mavi.led_count/10) , mavi.led_count)) + list(range(0, int(mavi.led_count/10))), (0,0,255))
-    
-    elif 15 <= position_x <= 85 and 15 >= position_y: #bottom
-        print("target in BOTTOM")
-        return mavi.write_leds(list(range(int(mavi.led_count/40) , int(mavi.led_count/60))), (0,0,255))
-    
-    elif 15 >= position_x and 85 <= position_y: #top-left
-        print("target in TOP-LEFT")
-        return mavi.write_leds(list(range(int(mavi.led_count/80) , int(mavi.led_count/90))), (0,0,255))
-    
-    elif 85 <= position_x and 85 <= position_y: #top-right
-        print("target in TOP-RIGHT")
-        return mavi.write_leds(list(range(int(mavi.led_count/10) , int(mavi.led_count/20))), (0,0,255))
-    
-    elif 40 >= position_x and 15 <= position_y <= 85: #left
-        print("target in LEFT")
-        return mavi.write_leds(list(range(int(mavi.led_count/70) , int(mavi.led_count/80))), (0,0,255))
-    
-    elif 60 <= position_x and 15 <= position_y <= 85: #right
-        print("target in RIGHT")
-        return mavi.write_leds(list(range(int(mavi.led_count/20) , int(mavi.led_count/30))), (0,0,255))
-
-    elif 15 >= position_x and 15 >= position_y: #bottom-left
-        print("target in BOTTOM-LEFT")
-        return mavi.write_leds(list(range(int(mavi.led_count/60) , int(mavi.led_count/70))), (0,0,255))
-
-    elif 85 <= position_x and 15 >= position_y: #bottom-right
-        print("target in BOTTOM-RIGHT")
-        return mavi.write_leds(list(range(int(mavi.led_count/30) , int(mavi.led_count/40))), (0,0,255))
-    
-    else:
-        print("target SPOTTED")
-        return mavi.write_led_strip((0, 255, 0))
-
-def MODE_compass(mavi):
+def MODE_use_compass(mavi):
     mavi.write_led(mavi.calculate_led_address_x1_plane(mavi.get_angle_x), (0,0,255))
 
 def MODE_distance(mavi, inner_boundary:int=50, outer_boundary:int=200):

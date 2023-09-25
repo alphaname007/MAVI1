@@ -1,0 +1,11 @@
+{
+    "name": "MAVI - Version 1.2",
+    "short_name": "MAVI",
+    "description": "A progressive webapp for the MAVI Glasses",
+    "theme_color": "transparent",
+    "background_color": "transparent",
+    "display": "standalone",
+    "orientation": "portrait",
+    "scope": "/",
+    "start_url": "/"
+}

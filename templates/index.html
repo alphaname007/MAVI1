@@ -1,10 +1,26 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MAVI</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static',filename='favicon.png') }}">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+    <link rel="manifest" href="{{ url_for('static',filename='manifest.json') }}" />
+    <script src="{{ url_for('static',filename='code.js') }}" defer></script>
+</head>
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8  offset-lg-2">
-                <h3 class="mt-5">Live Streaming</h3>
-                <img src="{{ url_for('video_feed') }}" width="100%">
-            </div>
-        </div>
+    <h1>MAVI - Version 1.2</h1>
+
+    <img id="frame" src="{{ url_for('video_feed') }}">
+
+    <p id="info_bar"></p>
+
+    <div id="button_group">
+        <button id="change_mode_button_find_target">Find Target</button>
+        <button id="change_mode_button_get_distance">Get Distance</button>
+        <button id="change_mode_button_use_compass">Use Compass</button>
     </div>
 </body>
+</html>

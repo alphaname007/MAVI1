@@ -3,7 +3,7 @@ from modes import *
 import time
 import cv2
 
-if __name__ = "__main__":
+if __name__ == "__main__":
     mavi:MAVI1 = MAVI1(led_count=88, led_brightness=1, angle_offset=(0, 0) , field_of_view_angle=82)
 
     while True:

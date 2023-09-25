@@ -1,6 +1,8 @@
 import cv2
 import math
 import numpy as np
+import os
+import random
 ##import neopixel
 #import board
 #from gpiozero import DistanceSensor
@@ -12,9 +14,7 @@ class MAVI1:
     angle_offset:tuple = None
     field_of_view_angle:int = None
 
-    target_img = None #cv2.imread()
-    target_scales = None #list of floats 0-1
-    target_scaled_images = None
+    scaled_target_images = None
     video_capture = None #cv2.VideoCapture()
 
     led_strip = None
@@ -39,15 +39,19 @@ class MAVI1:
         print("started MAVI")
 
     def change_target(self, filename:str):
-        self.target_img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
-        self.target_scaled_images = []
+        filename = os.path.join(*[os.getcwd(), "static", "targets", filename] )
+        target_img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
+
+        self.scaled_target_images = []
         for scale in np.linspace(0.2, 1, )[::-1]:
-            self.target_scaled_images.append(
+            self.scaled_target_images.append(
                 cv2.resize(
-                    self.target_img, 
-                    (int(self.target_img.shape[1] * scale), int(self.target_img.shape[0] * scale))
+                    target_img, 
+                    (int(target_img.shape[1] * scale), int(target_img.shape[0] * scale))
                 )
             )
+        print("changed Target")
+        return True
 
     def get_angle_x(self):
         return (0 + self.angle_offset[0]) % 360
@@ -59,10 +63,14 @@ class MAVI1:
         return (self.get_angle_x(), self.get_angle_y())
 
     def get_distance(self):
+        return random.Random().randint(0,120)
         return ultrasonic_sensor.distance
     
+    def get_frame(self):
+        return self.video_capture.read()
+
     def get_target(self, threshold:float=0.7):
-        ret, frame = self.video_capture.read()
+        ret, frame = self.get_frame()
 
         if ret:
             frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
