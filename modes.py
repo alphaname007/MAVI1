@@ -99,3 +99,4 @@ def MODE_start_up(mavi):
     for i in range(0, mavi.led_count):
         mavi.write_led(i, (int(i*color_change), 0, 255-int(i*color_change)))
         time.sleep(100/1000)
+    print("started Glasses")

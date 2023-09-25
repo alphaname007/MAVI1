@@ -36,6 +36,8 @@ class MAVI1:
         
         #setup_gpio()
 
+        print("started MAVI")
+
     def change_target(self, filename:str):
         self.target_img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
         self.target_scaled_images = []
