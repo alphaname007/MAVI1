@@ -49,7 +49,7 @@ class MAVI1:
     def get_target(self, threshold:float=0.6):
         ret, frame = self.video_capture.read()
 
-        scales = np.linspace(0.2, 1.0, 20)[::-1]
+        scales = np.linspace(0.1, 2, 50)[::-1]
 
         if ret:
             frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -101,11 +101,9 @@ class MAVI1:
         rad = math.acos(y / math.sqrt(x*x + y*y))
 
         alpha = math.degrees(rad)
-
         alpha = 360 - alpha if x < 0 else alpha
 
         address = (alpha / 360) * self.led_count
-        print(f"x:{x} y:{y} Winkel:{alpha} address:{address}")
         return int(address)
 
     def write_led(self, address:int, color:tuple):
