@@ -86,7 +86,7 @@ def MODE_distance(mavi, inner_boundary:int=50, outer_boundary:int=200):
     end_address_left = int(mavi.led_count * 3 / 4 + mavi.led_count / 4 * percent / 100)
     
     addresses = list(range(start_address_right, end_address_right)) + list(range(start_address_left, end_address_left))
-    mavi.write_leds(addresses,  (0,0255))
+    mavi.write_leds(addresses,  (0,0,255))
 
 def MODE_start_up(mavi):
     mavi.write_led_strip((0,0,0))

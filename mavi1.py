@@ -27,7 +27,7 @@ class MAVI1:
         self.field_of_view_angle = field_of_view_angle
         
         self.video_capture = cv2.VideoCapture(0)
-        change_target("target.jpg")
+        self.target_img = "target.jpg"
         
         #setup_gpio()
 
