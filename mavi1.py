@@ -13,6 +13,7 @@ class MAVI1:
     field_of_view_angle:int = None
 
     target_img = None #cv2.imread()
+    target_scales = None #list of floats 0-1
     video_capture = None #cv2.VideoCapture()
 
     led_strip = None
@@ -28,6 +29,7 @@ class MAVI1:
         
         self.video_capture = cv2.VideoCapture(0)
         self.change_target("target.jpg")
+        self.target_scales = np.linspace(0.4, 1, 4)[::-1]
         
         #setup_gpio()
 
@@ -49,14 +51,12 @@ class MAVI1:
     def get_target(self, threshold:float=0.6):
         ret, frame = self.video_capture.read()
 
-        scales = np.linspace(0.1, 2, 50)[::-1]
-
         if ret:
             frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
             frame_size = (frame_gray.shape[1], frame_gray.shape[0])
 
-            for scale in scales:
+            for scale in self.target_scales:
                 # Resize the object according to the scale
                 resized_obj = cv2.resize(self.target_img, (int(self.target_img.shape[1] * scale), int(self.target_img.shape[0] * scale)))
 
