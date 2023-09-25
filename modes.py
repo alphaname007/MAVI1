@@ -9,18 +9,20 @@ def MODE_find_target(mavi, threshold:float=0.6, spotted_angles:int=10):
     if 38 <= position[0] <= 62 and 38 <= position[1] <= 62:
         mavi.write_led_strip((0,255,0))
         print("Target spotted")
-        return
+        return (True, "spotted")
 
 
     if not found:
         mavi.write_led_strip((255,0,0))
-        return
+        return (False, "not found")
+    
     else:
         target_angles = mavi.calculate_target_angles_from_img_position(position) #Could be used to store the last known target position
         delta_angles = mavi.calculate_target_delta(mavi.get_angles(), target_angles)
 
         address = mavi.calculate_led_address_sphere(delta_angles)
         mavi.write_led(address, (0,0,255))
+        return(True, "found")
 
 
 
