@@ -14,6 +14,7 @@ class MAVI1:
 
     target_img = None #cv2.imread()
     target_scales = None #list of floats 0-1
+    target_scaled_images = None
     video_capture = None #cv2.VideoCapture()
 
     led_strip = None
@@ -28,13 +29,23 @@ class MAVI1:
         self.field_of_view_angle = field_of_view_angle
         
         self.video_capture = cv2.VideoCapture(0)
+        self.video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+        self.video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+
         self.change_target("target.jpg")
-        self.target_scales = np.linspace(0.4, 1, 4)[::-1]
         
         #setup_gpio()
 
     def change_target(self, filename:str):
         self.target_img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
+        self.target_scaled_images = []
+        for scale in np.linspace(0.2, 1, )[::-1]:
+            self.target_scaled_images.append(
+                cv2.resize(
+                    self.target_img, 
+                    (int(self.target_img.shape[1] * scale), int(self.target_img.shape[0] * scale))
+                )
+            )
 
     def get_angle_x(self):
         return (0 + self.angle_offset[0]) % 360
@@ -48,7 +59,7 @@ class MAVI1:
     def get_distance(self):
         return ultrasonic_sensor.distance
     
-    def get_target(self, threshold:float=0.6):
+    def get_target(self, threshold:float=0.7):
         ret, frame = self.video_capture.read()
 
         if ret:
@@ -56,12 +67,9 @@ class MAVI1:
 
             frame_size = (frame_gray.shape[1], frame_gray.shape[0])
 
-            for scale in self.target_scales:
-                # Resize the object according to the scale
-                resized_obj = cv2.resize(self.target_img, (int(self.target_img.shape[1] * scale), int(self.target_img.shape[0] * scale)))
-
+            for target_scaled_image in self.target_scaled_images:
                 # Use matchTemplate to find the object in the frame
-                result = cv2.matchTemplate(frame_gray, resized_obj, cv2.TM_CCOEFF_NORMED)
+                result = cv2.matchTemplate(frame_gray, target_scaled_image, cv2.TM_CCOEFF_NORMED)
 
                 loc = np.where( result >= threshold)
 
