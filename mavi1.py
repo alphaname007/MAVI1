@@ -27,12 +27,12 @@ class MAVI1:
         self.field_of_view_angle = field_of_view_angle
         
         self.video_capture = cv2.VideoCapture(0)
-        self.target_img = "target.jpg"
+        self.change_target("target.jpg")
         
         #setup_gpio()
 
     def change_target(self, filename:str):
-        self.target_img = cv2.imread(target_file, cv2.IMREAD_GRAYSCALE)
+        self.target_img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
 
     def get_angle_x(self):
         return (0 + self.angle_offset[0]) % 360
@@ -63,7 +63,7 @@ class MAVI1:
                 # Use matchTemplate to find the object in the frame
                 result = cv2.matchTemplate(frame_gray, resized_obj, cv2.TM_CCOEFF_NORMED)
 
-                loc = np.where( result >= self.threshold)
+                loc = np.where( result >= threshold)
 
                 for position in zip(*loc[::-1]):
                     cv2.circle(frame, position, 5, (0, 255, 255), 2)
@@ -93,20 +93,19 @@ class MAVI1:
         return int(address)
 
     def calculate_led_address_sphere(self, delta_angles:tuple):
-        delta_x, delta_y = delta_angles[0] % 360, delta_angles[1] % 360
-        x, y = (delta_x - 180) / 180, (delta_y - 180) / 180
+        delta_x, delta_y = delta_angles[0], delta_angles[1]
+
+        x = (360 - delta_x) * -1 if delta_x > 180 else delta_x
+        y = (360 - delta_y) * -1 if delta_y > 180 else delta_y
 
         rad = math.acos(y / math.sqrt(x*x + y*y))
 
-        alpha = 360 - math.degrees(rad)
+        alpha = math.degrees(rad)
 
-        if x < 0:
-            alpha = 360 - alpha
-
-        print(alpha)
+        alpha = 360 - alpha if x < 0 else alpha
 
         address = (alpha / 360) * self.led_count
-        print(address)
+        print(f"x:{x} y:{y} Winkel:{alpha} address:{address}")
         return int(address)
 
     def write_led(self, address:int, color:tuple):
@@ -128,8 +127,8 @@ class MAVI1:
         return
         self.strip.fill(color)
         return True
-    
-    
+
+
 
 
     def setup_gpio(self):

@@ -4,7 +4,7 @@ import cv2
 def MODE_find_target(mavi, threshold:float=0.6, spotted_angles:int=10):
     position, found, frame = mavi.get_target()
 
-    cv2.imshow("frame")
+    cv2.imshow("frame", frame)
     
     if not found:
         mavi.write_led_strip((255,0,0))
