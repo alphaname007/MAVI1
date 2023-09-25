@@ -31,7 +31,7 @@ class MAVI1:
         
         #setup_gpio()
 
-    def change_target(self, filename:str)
+    def change_target(self, filename:str):
         self.target_img = cv2.imread(target_file, cv2.IMREAD_GRAYSCALE)
 
     def get_angle_x(self):
