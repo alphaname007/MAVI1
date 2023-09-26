@@ -5,7 +5,7 @@ import os
 import random
 ##import neopixel
 #import board
-#from gpiozero import DistanceSensor
+from gpiozero import DistanceSensor
 
 class MAVI1:
     led_count:int = None 
@@ -34,7 +34,7 @@ class MAVI1:
 
         self.change_target("target.jpg")
         
-        #setup_gpio()
+        self.setup_gpio()
 
         print("started MAVI")
 
@@ -63,8 +63,7 @@ class MAVI1:
         return (self.get_angle_x(), self.get_angle_y())
 
     def get_distance(self):
-        return random.Random().randint(0,120)
-        return ultrasonic_sensor.distance
+        return self.ultrasonic_sensor.distance
     
     def get_frame(self):
         return self.video_capture.read()
@@ -144,10 +143,8 @@ class MAVI1:
         self.strip.fill(color)
         return True
 
-
-
-
     def setup_gpio(self):
-        self.led_strip = neopixel.NeoPixel(board.D18, 30, self.led_brightness)  #LED-Strip: LED Pin 30
-        self.ultrasonic_sensor = DistanceSensor(echo=17, trigger=4)                  #Ultrasonic-Sensor: ECHO Pin 17; Trigger Pin 4
+        #self.led_strip = neopixel.NeoPixel(board.D18, 30, self.led_brightness)  #LED-Strip: LED Pin 30
+        self.ultrasonic_sensor = DistanceSensor(echo=17, trigger=4)             #Ultrasonic-Sensor: ECHO Pin 17; Trigger Pin 4
+        self.gyro_sensor = 
         return True
