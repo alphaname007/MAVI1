@@ -146,5 +146,4 @@ class MAVI1:
     def setup_gpio(self):
         #self.led_strip = neopixel.NeoPixel(board.D18, 30, self.led_brightness)  #LED-Strip: LED Pin 30
         self.ultrasonic_sensor = DistanceSensor(echo=17, trigger=4)             #Ultrasonic-Sensor: ECHO Pin 17; Trigger Pin 4
-        self.gyro_sensor = 
         return True
