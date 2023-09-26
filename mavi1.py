@@ -3,8 +3,8 @@ import math
 import numpy as np
 import os
 import random
-##import neopixel
-#import board
+import neopixel
+import board
 from gpiozero import DistanceSensor
 
 class MAVI1:
@@ -124,7 +124,6 @@ class MAVI1:
         return int(address)
 
     def write_led(self, address:int, color:tuple):
-        return
         if address > self.led_count:
             return False
         else:
@@ -132,18 +131,16 @@ class MAVI1:
             return True
         
     def write_leds(self, addresses:list, color:tuple):
-        return
         for address in addresses:
             if not self.write_led(address, color):
                 return False
         return True
 
     def write_led_strip(self, color):
-        return
         self.strip.fill(color)
         return True
 
     def setup_gpio(self):
-        #self.led_strip = neopixel.NeoPixel(board.D18, 30, self.led_brightness)  #LED-Strip: LED Pin 30
+        self.led_strip = neopixel.NeoPixel(board.D18, 30, self.led_brightness)  #LED-Strip: LED Pin 30
         self.ultrasonic_sensor = DistanceSensor(echo=17, trigger=4)             #Ultrasonic-Sensor: ECHO Pin 17; Trigger Pin 4
         return True
