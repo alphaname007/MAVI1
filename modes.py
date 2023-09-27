@@ -3,7 +3,7 @@ import cv2
 
 def MODE_find_target(mavi, threshold:float=0.7, spotted_angles:int=10):
     position, found, frame = mavi.get_target()
-
+    mavi.write_led_strip((0,0,0))
     cv2.imshow("frame", frame)
     
     if 38 <= position[0] <= 62 and 38 <= position[1] <= 62:
@@ -25,9 +25,11 @@ def MODE_find_target(mavi, threshold:float=0.7, spotted_angles:int=10):
         return(True, "found")
 
 def MODE_use_compass(mavi):
+    mavi.write_led_strip((0,0,0))
     mavi.write_led(mavi.calculate_led_address_x1_plane(mavi.get_angle_x), (0,0,255))
 
 def MODE_distance(mavi, inner_boundary:float=0.5, outer_boundary:float=2):
+    mavi.write_led_strip((0,0,0))
     distance = mavi.get_distance()
     percent = inner_boundary / outer_boundary * 100
 

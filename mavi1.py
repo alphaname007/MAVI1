@@ -63,7 +63,8 @@ class MAVI1:
         return (self.get_angle_x(), self.get_angle_y())
 
     def get_distance(self):
-        return self.ultrasonic_sensor.distance
+        distance = round(self.ultrasonic_sensor.distance, 2)
+        return 
     
     def get_frame(self):
         return self.video_capture.read()
@@ -128,7 +129,7 @@ class MAVI1:
             return False
         else:
             address = (address + 6) % self.led_count
-            self.strip[address] = color
+            self.led_strip[address] = color
             return True
         
     def write_leds(self, addresses:list, color:tuple):
@@ -138,10 +139,10 @@ class MAVI1:
         return True
 
     def write_led_strip(self, color):
-        self.strip.fill(color)
+        self.led_strip.fill(color)
         return True
 
     def setup_gpio(self):
         self.led_strip = neopixel.NeoPixel(board.D18, self.led_count)  #LED-Strip: LED Pin 30
-        self.ultrasonic_sensor = DistanceSensor(echo=17, trigger=4)             #Ultrasonic-Sensor: ECHO Pin 17; Trigger Pin 4
+        self.ultrasonic_sensor = DistanceSensor(echo=27, trigger=4)             #Ultrasonic-Sensor: ECHO Pin 17; Trigger Pin 4
         return True
