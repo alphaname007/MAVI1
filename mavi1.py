@@ -127,6 +127,7 @@ class MAVI1:
         if address > self.led_count:
             return False
         else:
+            address = (address + 6) % self.led_count
             self.strip[address] = color
             return True
         
