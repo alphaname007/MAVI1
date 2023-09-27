@@ -74,7 +74,7 @@ if __name__ == "__main__":
 
     print("starting MAVI1")
     mavi:MAVI1 = MAVI1(led_count=20)
-
+    MODE_start_up(mavi)
     print("starting Webserver")
     app.run(debug=True, port=8080, host="0.0.0.0")
     print("started Webserver")
