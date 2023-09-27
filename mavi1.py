@@ -64,7 +64,7 @@ class MAVI1:
 
     def get_distance(self):
         distance = round(self.ultrasonic_sensor.distance, 2)
-        return 
+        return distance
     
     def get_frame(self):
         return self.video_capture.read()
