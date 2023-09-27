@@ -63,9 +63,6 @@ def main_loop():
                 MODE_distance
             elif mode == 2:
                 MODE_use_compass()
-            
-            #turbo.push(turbo.replace(render_template('index.html'), 'info_bar'))
-            turbo.update(render_template('index.html'), target='info_bar')
 
             time.sleep(0)
 
@@ -73,7 +70,7 @@ def main_loop():
 if __name__ == "__main__":
 
     print("starting MAVI1")
-    mavi:MAVI1 = MAVI1(led_count=20)
+    mavi:MAVI1 = MAVI1(led_count=27)
     MODE_start_up(mavi)
     print("starting Webserver")
     app.run(debug=True, port=8080, host="0.0.0.0")
@@ -85,8 +82,3 @@ if __name__ == "__main__":
     main_loop_thread.start()
 
     print("started MAVI completely")
-        
-
-
-
-
