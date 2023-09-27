@@ -28,7 +28,7 @@ def MODE_use_compass(mavi):
     mavi.write_led_strip((0,0,0))
     mavi.write_led(mavi.calculate_led_address_x1_plane(mavi.get_angle_x), (0,0,255))
 
-def MODE_distance(mavi, inner_boundary:float=0.5, outer_boundary:float=2):
+def MODE_get_distance(mavi, inner_boundary:float=0.5, outer_boundary:float=2):
     mavi.write_led_strip((0,0,0))
     distance = mavi.get_distance()
     percent = inner_boundary / outer_boundary * 100

@@ -60,7 +60,7 @@ def main_loop():
             if mode == 0:
                 MODE_find_target()
             elif mode == 1:
-                MODE_distance
+                MODE_get_distance()
             elif mode == 2:
                 MODE_use_compass()
 
