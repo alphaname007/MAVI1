@@ -27,7 +27,7 @@ def MODE_find_target(mavi, threshold:float=0.7, spotted_angles:int=10):
 def MODE_use_compass(mavi):
     mavi.write_led(mavi.calculate_led_address_x1_plane(mavi.get_angle_x), (0,0,255))
 
-def MODE_distance(mavi, inner_boundary:int=50, outer_boundary:int=200):
+def MODE_distance(mavi, inner_boundary:float=0.5, outer_boundary:float=2):
     distance = mavi.get_distance()
     percent = inner_boundary / outer_boundary * 100
 
