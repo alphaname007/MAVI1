@@ -3,8 +3,7 @@
 **Project status:** ``✅ Active``
 
 
-This is the code for a new innovation @ Zeiss, creating a new experience in vision.
+The Repository for the MAVI1 Glasses - a Hackathon Project at the Carl Zeiss AG
+Creating a new experience in vision by introducing analog AR to digital computervision.
 
-More details soon!
-
-© All rights reserved! 2023 Zeiss
+All rights reserved!
